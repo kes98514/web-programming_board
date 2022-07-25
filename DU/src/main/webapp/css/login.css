@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+.loginfiled {
+	width: 500px;
+}
+
+.logintable, tr, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
