@@ -1,0 +1,30 @@
+@charset "UTF-8";
+
+header {
+	display: flex;
+	justify-content: space-between;
+	border-bottom: 1.5px solid #0000ff;
+	margin-bottom: 10px;
+}
+
+.userInfoDiv {
+	border-radius: 50%;
+	text-align: right;
+	font-size: 28px;
+}
+
+.logoDiv {
+	width: 120px;
+}
+
+.logoDiv > img {
+	width: 100%;
+}
+
+.parent {
+	display:flex;
+}
+
+.child {
+	flex: 1;
+}

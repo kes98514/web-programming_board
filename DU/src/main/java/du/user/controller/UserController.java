@@ -44,6 +44,7 @@ public class UserController {
 		return "user/userInfoConfirm.jsp";
 	}
 	
+	
 	@RequestMapping("/userModify.do")
 	public String userModify(@ModelAttribute UserVO user) {
 		userService.updateUser(user);
