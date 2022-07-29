@@ -9,7 +9,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="css/main.css">
 	<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
-	<script src="js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 	
 	<style>
 		header {
@@ -37,6 +37,10 @@
 		    justify-content: center;
 		    display: flex;
 		}
+		#filterDiv {
+			display: flex;
+			justify-content: space-between;
+		}
 	</style>
 	<title>Main Page</title>
 </head>
@@ -57,17 +61,19 @@
 		</div>
 	</header>
 	
-	<div>
+	<div id="filterDiv">
 		<table>
 			<tr>
 				<th>제목</th>
 				<td><input type="text" id="searchTitle"></td>
-				<td><button type="button" class="btn btn-info" id=searchBtn">검색</button></td>
+				<td><button type="button" class="btn btn-info" id="searchBtn">검색</button></td>
 			</tr>
 		</table>
+		<button type="button" class="btn btn-success"
+			onclick="window.location.href='boardWritePage.do'">게시글 등록</button>
 	</div>
-	<section>
-		<table class="table table-striped">
+	<section>	
+		<table id="dataList" class="table table-striped">
 			<colgroup>  
 			    <col style="width:5%">    	
 		        <col style="width:65%">
@@ -118,6 +124,37 @@
 </body>
 
 <script>
+
+	window.onload = function(){
+		var searchBtn = document.getElementById("searchBtn");
+		var searchTitle = document.getElementById("searchTitle");
+		
+ 		searchTitle.addEventListener("keyup", function(event) {
+		    if (event.keyCode === 13) {
+		    	searchBtn.click();
+	    	}
+		}); 
+		
+		searchBtn.onclick = function() {
+	/* 		var table = document.getElementById("dataList");
+	 		var tbody = table.getElementsByTagName("tbody")[0];
+	 		var tr = tbody.getElementsByTagName("tr");
+			
+	 		for (var item of tr) {
+	 		    var title = item.getElementsByTagName("td")[1].innerHTML;
+				
+	 			if(title.includes(searchTitle.value)){
+	 				item.style.display = '';
+	 			} else {
+	 				item.style.display = 'none';
+	 			}
+	 		} */
+	 		
+			var url = "boardListPage.do";
+			url = url + "?title=" + searchTitle.value;
+			location.href = url;
+		}
+	}
 	//이전 버튼 이벤트
 	function fn_prev(page, range, rangeSize) {
 		var page = ((range - 2) * rangeSize) + 1;
@@ -125,6 +162,7 @@
 		var url = "boardListPage.do";
 		url = url + "?page=" + page;
 		url = url + "&range=" + range;
+		url = url + "&title=" + searchTitle.value;
 		location.href = url;
 	}
   	//페이지 번호 클릭
@@ -132,6 +170,7 @@
 		var url = "boardListPage.do";
 		url = url + "?page=" + page;
 		url = url + "&range=" + range;
+		url = url + "&title=" + searchTitle.value;
 		location.href = url;	
 	}
 	//다음 버튼 이벤트
@@ -141,6 +180,7 @@
 		var url = "boardListPage.do";
 		url = url + "?page=" + page;
 		url = url + "&range=" + range;
+		url = url + "&title=" + searchTitle.value;
 		location.href = url;
 	}
 </script>

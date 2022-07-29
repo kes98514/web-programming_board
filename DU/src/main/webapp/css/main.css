@@ -28,3 +28,8 @@ header {
 .child {
 	flex: 1;
 }
+
+#filterDiv {
+	display: flex;
+	justify-content: space-between;
+}
