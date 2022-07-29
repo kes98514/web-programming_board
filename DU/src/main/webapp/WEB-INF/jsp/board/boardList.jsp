@@ -73,7 +73,7 @@
 			onclick="window.location.href='boardWritePage.do'">게시글 등록</button>
 	</div>
 	<section>	
-		<table id="dataList" class="table table-striped">
+		<table id="dataList" class="table table-stiped table-hover">
 			<colgroup>  
 			    <col style="width:5%">    	
 		        <col style="width:65%">
@@ -90,8 +90,8 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${boardList}" var="item">
-					<tr>
+				<c:forEach items="${boardList}" var="item" varStatus="status">
+					<tr ondblclick="trDblClick('${item.idx}');">
 						<td><c:out value="${item.idx}"/></td>
 						<td><c:out value="${item.title}"/></td>
 						<td><c:out value="${item.writerName}"/></td>
@@ -182,6 +182,12 @@
 		url = url + "&range=" + range;
 		url = url + "&title=" + searchTitle.value;
 		location.href = url;
+	}
+	
+	function trDblClick(idx) {
+		var url = "boardInfoPage/"+idx+".do";
+		
+		location.href = url;	
 	}
 </script>
 </html>
