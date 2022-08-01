@@ -63,4 +63,11 @@ public class BoardController {
 		mav.addObject("board", board);
 		return mav;
 	}
+	
+	@RequestMapping("/boardDelete/{idx}.do")
+	public String boardDelete(@PathVariable("idx") long idx) {
+		boardService.deleteBoard(idx);
+		
+		return "redirect:/boardListPage.do";
+	}
 }

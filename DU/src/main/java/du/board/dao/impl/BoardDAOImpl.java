@@ -32,4 +32,9 @@ public class BoardDAOImpl extends EgovAbstractMapper implements BoardDAO {
 		return selectOne("Board.selectBoard", idx);
 	}
 
+	@Override
+	public void deleteBoard(long idx) {
+		delete("Board.deleteBoard", idx);
+	}
+
 }

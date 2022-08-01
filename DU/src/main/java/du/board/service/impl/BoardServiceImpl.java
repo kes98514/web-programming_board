@@ -53,4 +53,9 @@ public class BoardServiceImpl implements BoardService {
 	public BoardVO selectBoard(long idx) {
 		return boardDAO.selectBoard(idx);
 	}
+
+	@Override
+	public void deleteBoard(long idx) {
+		boardDAO.deleteBoard(idx);
+	}
 }
