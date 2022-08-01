@@ -1,5 +1,6 @@
 package du.board.controller;
 
+
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -64,8 +65,8 @@ public class BoardController {
 		return mav;
 	}
 	
-	@RequestMapping("/boardDelete.do")
-	public String boardDelete(long idx) {
+	@RequestMapping("/boardDelete/{idx}.do")
+	public String boardDelete(@PathVariable("idx") long idx) {
 		boardService.deleteBoard(idx);
 		
 		return "redirect:/boardListPage.do";

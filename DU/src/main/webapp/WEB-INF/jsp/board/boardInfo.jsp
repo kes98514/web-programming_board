@@ -46,15 +46,15 @@
 <body>
 	<header>
 		<div class="logoDiv">
-			<img alt="logo" src="${pageContext.request.contextPath}/images/04-1.jpg" onclick="window.location.href='mainPage.do'">
+			<img alt="logo" src="${pageContext.request.contextPath}/images/04-1.jpg" onclick="window.location.href='${pageContext.request.contextPath}/mainPage.do'">
 		</div>
 		<div class="userInfoDiv">
 			[<c:out value="${USER.name}"></c:out>]님 반갑습니다
 	
-			<button type="button" class ="btn btn-primary btn-md" style="float: right" onclick="window.location.href='logout.do'"> 
+			<button type="button" class ="btn btn-primary btn-md" style="float: right" onclick="window.location.href='${pageContext.request.contextPath}/logout.do'"> 
 			로그아웃 </button>
 	
-			<button type="button" class ="btn btn-outline-primary btn-md" style="float: right" onclick="window.location.href='userInfoConfirm.do'"> 
+			<button type="button" class ="btn btn-outline-primary btn-md" style="float: right" onclick="window.location.href='${pageContext.request.contextPath}/userInfoConfirm.do'"> 
 			내정보 </button>
 					
 		</div>
@@ -77,11 +77,14 @@
 	
 	<button type="button" class="btn btn-secondary"
 			onclick="history.back(); return false;">이전</button>
-	<button type="button" class="btn btn-secondary"
-			id="deleteBtn">삭제</button>
-	<button type="button" class="btn btn-primary"
-			onclick="window.location.href='${pageContext.request.contextPath}/boardModifyPage/${board.idx}.do'">
-			수정</button>
+			
+	<c:if test="${board.writerId == USER.userId }">
+		<button type="button" class="btn btn-secondary"
+				id="deleteBtn">삭제</button>
+		<button type="button" class="btn btn-primary"
+				onclick="window.location.href='${pageContext.request.contextPath}/boardModifyPage/${board.idx}.do'">
+		수정</button>
+	</c:if>
 
 			
 </body>
@@ -93,23 +96,35 @@
 		var deleteBtn = document.getElementById("deleteBtn");
 		
 		deleteBtn.onclick = function() {
-			if(confirm("삭제 하시겠습니까?") == true){
-				var path = "${pageContext.request.contextPath }/boardDelete/${board.idx}.do";
-				var params = {
-						"idx": "${board.idx}"
-				}
+			if(confirm("삭제하시겠습니까?") == true){
+				url = "${pageContext.request.contextPath}/boardDelete/${board.idx}.do";
 				
-				post(path, params);
-			} else {
-				return ;
+				location.href= url;
+// 				var params = {
+// 						"idx": "${board.idx}"
+// 				};
+// 				post(path, params);
+			}
+			else {
+				return;
 			}
 		}
+		
+// 		var modifyBtn = document.getElemenetById("modifyBtn");
+		
+// 		modifyBtn.onclick = function() {
+// 			var path = "${pageContext.request.contextPath}/boardModifyPage.do";
+// 			var params = {
+// 					"idx": "${board.idx}"
+// 			};
+// 			post(path, params);
+// 		}
 	}
 	
 	function post(path, params) {
 		
 		const form = document.createElement('form');
-		form.method = 'post';
+		form.method = "post";
 		form.action = path;
 		
 		for (const key in params) {

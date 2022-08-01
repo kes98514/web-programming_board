@@ -14,15 +14,15 @@
 </head>
 <body>
 	<div class="logoDiv">
-		<img alt="logo" src="${pageContext.request.contextPath}/images/04-1.jpg" onclick="window.location.href='mainPage.do'">
+		<img alt="logo" src="${pageContext.request.contextPath}/images/04-1.jpg" onclick="window.location.href='${pageContext.request.contextPath}/mainPage.do'">
 	</div>
 	<div class="userInfoDiv">
 		[<c:out value="${USER.name}"></c:out>]님 반갑습니다
 
-		<button type="button" class ="btn btn-primary btn-md" style="float: right" onclick="window.location.href='logout.do'"> 
+		<button type="button" class ="btn btn-primary btn-md" style="float: right" onclick="window.location.href='${pageContext.request.contextPath}/logout.do'"> 
 		로그아웃 </button>
 
-		<button type="button" class ="btn btn-outline-primary btn-md" style="float: right" onclick="window.location.href='userInfoConfirm.do'"> 
+		<button type="button" class ="btn btn-outline-primary btn-md" style="float: right" onclick="window.location.href='${pageContext.request.contextPath}/userInfoConfirm.do'"> 
 		내정보 </button>				
 	</div>
 </body>
