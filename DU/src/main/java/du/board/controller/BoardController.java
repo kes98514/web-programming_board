@@ -64,10 +64,28 @@ public class BoardController {
 		return mav;
 	}
 	
-	@RequestMapping("/boardDelete/{idx}.do")
-	public String boardDelete(@PathVariable("idx") long idx) {
+	@RequestMapping("/boardDelete.do")
+	public String boardDelete(long idx) {
 		boardService.deleteBoard(idx);
 		
 		return "redirect:/boardListPage.do";
+	}
+	
+	@RequestMapping("/boardModifyPage/{idx}.do")
+	public ModelAndView boardModifyPage(@PathVariable("idx") long idx) {
+		ModelAndView mav = new ModelAndView("board/boardModify.jsp");
+		
+		BoardVO board = boardService.selectBoard(idx);
+		mav.addObject("board", board);
+		
+		return mav;
+	}
+	
+	@RequestMapping("/boardModify.do")
+	public String boardModify(@ModelAttribute BoardVO board) {
+		
+		boardService.updateBoard(board);
+		
+		return "redirect:/boardInfoPage/"+Long.toString(board.getIdx())+ ".do";
 	}
 }
