@@ -1,20 +1,27 @@
 package du.board.controller;
 
-
+import java.io.File;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 
+import du.board.domain.BoardAttFileVO;
 import du.board.domain.BoardVO;
 import du.board.service.BoardService;
+import du.common.DownloadView;
 import du.common.Pagination;
 
 @Controller
@@ -88,5 +95,16 @@ public class BoardController {
 		boardService.updateBoard(board);
 		
 		return "redirect:/boardInfoPage/"+Long.toString(board.getIdx())+ ".do";
+	}
+	
+	@RequestMapping(value = "/download/boardAttFile.do", method = RequestMethod.POST)
+	public View downloadBoardAttFile(BoardAttFileVO criteria, Model model) throws Exception {		
+		BoardAttFileVO attFileVO = boardService.findBoardAttFile(criteria);
+		File file = new File(attFileVO.getFullAttFilePath());
+		
+		model.addAttribute("downloadFile", file);
+		model.addAttribute("downloadFilename", attFileVO.getOldFilename());
+		
+		return new DownloadView();
 	}
 }

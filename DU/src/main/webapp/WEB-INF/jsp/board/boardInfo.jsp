@@ -72,6 +72,13 @@
 			<th>내용</th>
 			<td colspan="3" style="width: 90%; height: 100px;"><c:out value="${board.content}"></c:out></td>
 		</tr>
+		
+		<tr>
+			<th>첨부파일</th>
+			<td colspan="3">
+				<a href="#" onclick="downloadFile(); return false;" >${board.attFilename }</a>
+			</td>
+		</tr>
 		 
 	</table>
 	
@@ -85,7 +92,11 @@
 				onclick="window.location.href='${pageContext.request.contextPath}/boardModifyPage/${board.idx}.do'">
 		수정</button>
 	</c:if>
-
+	
+	<form id="fileDownload" action="${contextPath}/download/boardAttFile.do" method="post">
+		<input type="hidden" name="boardIdx" value="${board.idx}" />
+		<input type="hidden" name="idx" value="${board.attIdx}" />
+	</form>
 			
 </body>
 
@@ -97,13 +108,12 @@
 		
 		deleteBtn.onclick = function() {
 			if(confirm("삭제하시겠습니까?") == true){
-				url = "${pageContext.request.contextPath}/boardDelete/${board.idx}.do";
-				
-				location.href= url;
-// 				var params = {
-// 						"idx": "${board.idx}"
-// 				};
-// 				post(path, params);
+				var path = "${pageContext.request.contextPath}/boardDelete/${board.idx}.do";
+				var params = {
+					"idx"		:	"${board.idx}",
+					"attIdx"	:	"${board.attIdx}"
+				}
+				post(path, params);
 			}
 			else {
 				return;
@@ -140,6 +150,14 @@
 		
 		document.body.appendChild(form);
 		from.submit();
+	}
+	
+	function downloadFile(){
+		var inputIdx = document.querySelector('#fileDownload > input[name="idx"]');
+		
+		if(inputIdx.value){
+			document.forms["fileDownload"].submit();
+		}
 	}
 </script>
 </html>
