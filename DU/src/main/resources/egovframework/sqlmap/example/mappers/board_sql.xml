@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Board">
 
-	<resultMap type="boardMap" id="BoardVO">
+	<resultMap type="boardMap" id="BoardVO">	
 		<id property="idx"				column="idx"/>
 		<result property="title"		column="title"/>
 		<result property="content"		column="content"/>
@@ -10,6 +10,17 @@
 		<result property="writerName"	column="writer_name"/>
 		<result property="registDate"	column="regist_date"/>
 		<result property="modifyDate"	column="modify_date"/>
+		<result property="attIdx"		column="att_idx"/>
+		<result property="attFilename"	column="att_filename"/>
+	</resultMap>
+	
+	<resultMap type="BoardAttFileVO" id="boardAttMap">
+		<id		property="idx"			column="idx"/>
+		<result	property="boardIdx"		column="board_idx"/>
+		<result property="filePath"		column="file_path"/>
+		<result property="oldFilename"	column="old_filename"/>
+		<result property="newFilename" 	column="new_filename"/>
+		<result property="fileSize"		column="file_size"/>		
 	</resultMap>
 	
 	<select id="selectBoardList" parameterType="hashmap" resultMap="BoardVO">
@@ -45,11 +56,27 @@
 	</select>
 	
 	<select id="selectBoard" parameterType="long" resultMap="BoardVO">
-		<![CDATA[
+		<![CDATA[ 
 			SELECT 
-				A.*, B.name AS writer_name
+				A.idx,
+				A.title,
+				A.content,
+				A.writer_id,				 
+				B.name AS writer_name,
+				A.regist_date,
+				A.modify_date,
+				C.idx AS att_idx,
+				C.old_filename AS att_filename
 			FROM 
-				tb_board A INNER JOIN tb_user B ON A.writer_id = B.user_id
+				tb_board A 
+			INNER JOIN 
+				tb_user B 
+			ON 
+				A.writer_id = B.user_id
+			LEFT OUTER JOIN
+				tb_board_att_file C
+			ON
+				A.idx = C.board_idx 
 			WHERE
 				A.idx = #{idx}
 		]]>
@@ -62,6 +89,12 @@
 			VALUE
 				(#{title}, #{content}, #{writerId});
 		]]>
+				
+		<selectKey keyProperty="idx" order="AFTER" resultType="_int">
+			<![CDATA[
+				SELECT LAST_INSERT_ID();
+			]]>
+		</selectKey>
 	</insert>
 	
 	<delete id="deleteBoard" parameterType="long">
@@ -72,6 +105,45 @@
 		]]>
 	</delete>
 	
+	<insert id="insertBoardAttFile" parameterType="BoardAttFileVO">
+		<![CDATA[
+			INSERT INTO
+				tb_board_att_file
+			(
+				board_idx,
+				file_path,
+				old_filename,
+				new_filename,
+				file_size,
+				writer_id
+			)
+			VALUES
+			(
+				#{boardIdx},
+				#{filePath},
+				#{oldFilename},
+				#{newFilename},
+				#{fileSize},
+				#{writerId}
+			);
+		]]>
+	</insert>
+	
+	<select id="selectBoardAttFile" parameterType="BoardAttFileVO" resultMap="boardAttMap">
+		<![CDATA[
+			SELECT
+				idx,
+				board_idx,
+				file_path,
+				old_filename,
+				new_filename,
+			FROM
+				tb_board_att_file
+			WHERE
+				idx = #{idx}
+				AND board_idx = #{boardIdx};
+		]]>
+	</select>
 	<update id="updateBoard" parameterType="boardMap">
 		<![CDATA[
 			UPDATE

@@ -72,6 +72,13 @@
 			<th>내용</th>
 			<td colspan="3" style="width: 90%; height: 100px;"><c:out value="${board.content}"></c:out></td>
 		</tr>
+		
+		<tr>
+			<th>첨부파일</th>
+			<td colspan="3">
+				<a href="#" onclick="downloadFile(); return false;">${board.attFilename }</a>
+			</td>
+		</tr>
 		 
 	</table>
 	
@@ -85,8 +92,34 @@
 				onclick="window.location.href='${pageContext.request.contextPath}/boardModifyPage/${board.idx}.do'">
 		수정</button>
 	</c:if>
-
-			
+	
+	<form id = "fileDownload" action="${pageContext.request.contextPath}/download/boardAttfile.do">
+		<input type="hidden" name="boardIdx" value='${board.idx}'/>
+		<input type="hidden" name="idx" value='${board.attIdx }'/>
+	</form>
+	<div id="replyDiv" style="margin-top: 10px;">
+		<form action='${pageContext.request.contextPath }/replyWrite.do' method="post">
+			<table class="table table-light" style="width: 50%;">
+				<tr>
+					<th style="width: 10%;">댓글</th>
+					<td>
+						<input type="text" name="content" style="width: 90%;"/>
+						<button type="submit" class="btn btn-success">등록</button>
+					</td>
+				</tr>
+				
+<%-- 				<c:forEach items="replyList" var="item" varStatus="status"> --%>
+<!-- 					<tr> -->
+<%-- 						<th style="width: 10%"><c:out value="${item.writerName }"/></th> --%>
+<%-- 						<td><c:out value="${item.content }"/> --%>
+<%-- 							<c:out value="${item.registDate }"/> --%>
+<!-- 						</td> -->
+<!-- 					</tr> -->
+<%-- 				</c:forEach> --%>
+			</table>
+			<input type="hidden" name="boardIdx" value="${board.idx}"/>
+		</form>
+	</div>
 </body>
 
 <script>
@@ -121,6 +154,8 @@
 // 		}
 	}
 	
+	
+	
 	function post(path, params) {
 		
 		const form = document.createElement('form');
@@ -140,6 +175,13 @@
 		
 		document.body.appendChild(form);
 		from.submit();
+	}
+	
+	function downloadFile() {
+		var inputIdx = document.querySelector('#fileDownload > input[name="idx"]');
+		if(inputIdx.value){
+			document.forms["fileDownload"].submit();
+		}
 	}
 </script>
 </html>
