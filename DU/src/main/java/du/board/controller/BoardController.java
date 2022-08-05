@@ -71,23 +71,6 @@ public class BoardController {
 		ModelAndView mav = new ModelAndView("board/boardInfo.jsp");
 		
 		BoardVO board = boardService.selectBoard(idx);
-
-		mav.addObject("board", board);
-		return mav;
-	}
-	
-	@RequestMapping("/boardDelete/{idx}.do")
-	public String boardDelete(@PathVariable("idx") long idx) {
-		boardService.deleteBoard(idx);
-		
-		return "redirect:/boardListPage.do";
-	}
-	
-	@RequestMapping("/boardModifyPage/{idx}.do")
-	public ModelAndView boardModifyPage(@PathVariable("idx") long idx) {
-		ModelAndView mav = new ModelAndView("board/boardModify.jsp");
-		
-		BoardVO board = boardService.selectBoard(idx);
 		mav.addObject("board", board);
 		
 		List<ReplyVO> replyList = replyService.selectReplyList(idx);
@@ -96,12 +79,32 @@ public class BoardController {
 		return mav;
 	}
 	
-	@RequestMapping("/boardModify.do")
-	public String boardModify(@ModelAttribute BoardVO board) {
+	@RequestMapping("/boardDelete.do")
+	public String boardDelete(BoardVO boardVO) {
+		boardService.deleteBoard(boardVO);
 		
-		boardService.updateBoard(board);
+		return "redirect:/boardListPage.do";
+	}
+	
+	@RequestMapping("/boardModifyPage.do")
+	public ModelAndView boardModifyPage(long idx) {
+		ModelAndView mav = new ModelAndView("board/boardModify.jsp");
 		
-		return "redirect:/boardInfoPage/"+Long.toString(board.getIdx())+ ".do";
+		BoardVO board = boardService.selectBoard(idx);
+		mav.addObject("board", board);
+		
+		return mav;
+	}
+	
+	@RequestMapping(value = "/boardModify.do", method = RequestMethod.POST)
+	public String boardModify(
+		@ModelAttribute BoardVO board,
+		HttpSession session
+	) throws Exception {
+		
+		boardService.updateBoard(board, session);
+		
+		return "redirect:/boardInfoPage/"+Long.toString(board.getIdx())+".do";
 	}
 	
 	@RequestMapping(

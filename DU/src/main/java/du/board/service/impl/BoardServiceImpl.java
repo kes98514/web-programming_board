@@ -62,7 +62,7 @@ public class BoardServiceImpl implements BoardService {
 		insertBoardAttFile(board);
 	}
 
-	private void insertBoardAttFile(BoardVO boardVO) {
+	private void insertBoardAttFile(BoardVO boardVO) throws Exception{
 		if(!boardVO.isExistAttFile()) {
 			return;
 		}
@@ -71,7 +71,7 @@ public class BoardServiceImpl implements BoardService {
 		try {
 			uploadBoardAttFileVO(attFileVO);
 		} catch (Exception e) {
-			new RuntimeException();
+			throw new RuntimeException(e.getMessage());
 		}
 		
 		boardDAO.insertBoardAttFile(attFileVO);
@@ -113,13 +113,45 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public void deleteBoard(long idx) {
-		boardDAO.deleteBoard(idx);
+	public void deleteBoard(BoardVO board) {
+		if(board.hasAttFile()) {
+			boardDAO.deleteBoardAttFile(board.getCriteria());
+		}
+		
+		boardDAO.deleteBoard(board.getIdx());
 	}
 
 	@Override
-	public void updateBoard(BoardVO board) {
-		boardDAO.updateBoard(board);
+	public void updateBoard(BoardVO board, HttpSession session) throws Exception {
+		UserVO user = (UserVO) session.getAttribute("USER");
+		if(user == null) {
+			return;
+		}
+		board.setWriterId(user.getUserId());
+		
+		boardDAO.updateBoard(board); 
+		updateBoardAttFile(board);
+	}
+
+	private void updateBoardAttFile(BoardVO boardVO) throws Exception{
+		String handleType = boardVO.getHandleType();
+		BoardAttFileVO criteria = boardVO.getCriteria();
+		boolean hasAttFile = boardVO.hasAttFile();
+		
+		if("fix".equals(handleType)) {
+			return;
+		}
+		
+		if(hasAttFile) {
+			deleteBoardAttFile(criteria);
+		
+			if("del".equals(handleType)) {
+				return;
+			} else if("chg".equals(handleType)) {
+				insertBoardAttFile(boardVO);
+			}
+		}
+	
 	}
 
 	@Override

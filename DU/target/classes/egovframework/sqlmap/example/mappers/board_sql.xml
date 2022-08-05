@@ -14,13 +14,13 @@
 		<result property="attFilename"	column="att_filename"/>
 	</resultMap>
 	
-	<resultMap type="BoardAttFileVO" id="boardAttMap">
-		<id		property="idx"			column="idx"/>
-		<result	property="boardIdx"		column="board_idx"/>
-		<result property="filePath"		column="file_path"/>
-		<result property="oldFilename"	column="old_filename"/>
-		<result property="newFilename" 	column="new_filename"/>
-		<result property="fileSize"		column="file_size"/>		
+	<resultMap type="BoardAttFileVO" id="boardAttFileMap">
+		<id		property="idx"			column="idx" />
+		<result	property="boardIdx"		column="board_idx" />
+		<result	property="filePath"		column="file_path" />
+		<result	property="oldFilename"	column="old_filename" />
+		<result	property="newFilename"	column="new_filename" />
+		<result	property="fileSize"		column="file_size" />
 	</resultMap>
 	
 	<select id="selectBoardList" parameterType="hashmap" resultMap="BoardVO">
@@ -129,7 +129,7 @@
 		]]>
 	</insert>
 	
-	<select id="selectBoardAttFile" parameterType="BoardAttFileVO" resultMap="boardAttMap">
+	<select id="selectBoardAttFile" parameterType="BoardAttFileVO" resultMap="boardAttFileMap">
 		<![CDATA[
 			SELECT
 				idx,
@@ -137,6 +137,7 @@
 				file_path,
 				old_filename,
 				new_filename,
+				file_size
 			FROM
 				tb_board_att_file
 			WHERE
@@ -144,6 +145,7 @@
 				AND board_idx = #{boardIdx};
 		]]>
 	</select>
+	
 	<update id="updateBoard" parameterType="boardMap">
 		<![CDATA[
 			UPDATE
@@ -156,4 +158,13 @@
 				idx = #{idx}
 		]]>
 	</update>
+	<delete id="deleteBoardAttFile" parameterType="BoardAttFileVO">
+		<![CDATA[
+			DELETE FROM
+				tb_board_att_file
+			WHERE
+				idx = #{idx}
+				AND board_idx = #{boardIdx};
+		]]>
+	</delete>
 </mapper>

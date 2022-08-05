@@ -26,7 +26,7 @@ public class ReplyController {
 	
 	@RequestMapping("/replyDelete.do")
 	public String replyDelete(long idx, String boardIdx) {
-		replyService.deleteReply(idx);
+		replyService.deleteReply(idx); 
 		
 		return "redirect:/boardInfoPage/"+boardIdx+".do";
 	}
