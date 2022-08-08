@@ -111,14 +111,22 @@
 							<th style="width: 10%;"><c:out value="${item.writerName }"/></th>
 							<td data-idx="${item.idx}">
 								<span><c:out value="${item.content }"/></span>
-								
-								<button type="button" style="float:right; margin-left: 5px;"
-									class="btn btn-primary replyModifyBtn">수정</button>
-								<button type="button" style="float:right;" class="btn btn-secondary"
-									onclick="deleteReply('${item.idx}')">삭제</button>
-																								
-								<fmt:parseDate value="${item.registDate}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="date"/>		
-								<br>(<fmt:formatDate value="${date}" pattern="yyyy-MM-dd HH:mm:ss"/>)
+								<c:if test="${USER.userId == item.writerId}">							
+									<button type="button" style="float:right; margin-left: 5px;"
+										class="btn btn-primary replyModifyBtn">수정</button>
+									<button type="button" style="float:right;" class="btn btn-secondary"
+										onclick="deleteReply('${item.idx}')">삭제</button>
+								</c:if>		
+								<c:choose>
+									<c:when test="${item.modifyDate != null }">
+										<fmt:parseDate value="${item.modifyDate}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="date"/>		
+										<br>(<fmt:formatDate value="${date}" pattern="yyyy-MM-dd HH:mm:ss"/>)
+									</c:when>
+									<c:otherwise>
+										<fmt:parseDate value="${item.registDate}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="date"/>		
+										<br>(<fmt:formatDate value="${date}" pattern="yyyy-MM-dd HH:mm:ss"/>)
+									</c:otherwise>		
+								</c:choose>																		
 							</td>
 						</tr>
 					</c:forEach>
